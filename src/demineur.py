@@ -18,9 +18,6 @@ class Demineur:
             self.grille[y][x] = 'M'
             mines_placees += 1
 
-
-
-
     def __calculer_indices(self):
         for y in range(self.taille):
             for x in range(self.taille):

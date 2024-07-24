@@ -1,0 +1,88 @@
+name: GitHub CI CD
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
+    branches:
+      - main
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+
+  doc-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        pip install -r requirements_doc.txt
+    - name: Build documentation
+      run: |
+        cd doc
+        make html
+    - name: Upload HTML documentation artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation-html
+        path: doc/_build/html
+        retention-days: 7
+
+  doc-deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Clean destination folder
+      run: |
+        rm -rf version/dev && mkdir -p version/dev
+    - name: Download HTML documentation artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: documentation-html
+        path: version/dev
+    - name: Update apt-get
+      run: |
+        sudo apt-get update
+    - name: Decompress artifact content
+      run: |
+        sudo apt-get install -y cargo && cargo install ouch
+        export PATH="$HOME/.cargo/bin/:$PATH"
+        ouch --version
+        cd version/dev && compressed_artifact=$(ls .)
+        ouch decompress $compressed_artifact
+        decompressed_artifact=$(ls -I "*${compressed_artifact##*.}")
+        mv $decompressed_artifact/* .
+        rm -rf $compressed_artifact $decompressed_artifact
+    - name: Display structure of version/dev
+      run: |
+        ls -R version/dev
+    - name: Deploy to gh-pages branch
+      uses: JamesIves/github-pages-deploy-action@v4.6.3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages
+        folder: doc/_build/html
+        clean: true
+        single-commit: true
