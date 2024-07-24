@@ -1,0 +1,3 @@
+Sphinx
+sphinx-design
+sphinx-gallery
