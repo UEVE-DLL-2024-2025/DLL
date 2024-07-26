@@ -66,16 +66,6 @@ jobs:
     - name: Update apt-get
       run: |
         sudo apt-get update
-    - name: Decompress artifact content
-      run: |
-        sudo apt-get install -y cargo && cargo install ouch
-        export PATH="$HOME/.cargo/bin/:$PATH"
-        ouch --version
-        cd version/dev && compressed_artifact=$(ls .)
-        ouch decompress $compressed_artifact
-        decompressed_artifact=$(ls -I "*${compressed_artifact##*.}")
-        mv $decompressed_artifact/* .
-        rm -rf $compressed_artifact $decompressed_artifact
     - name: Display structure of version/dev
       run: |
         ls -R version/dev
