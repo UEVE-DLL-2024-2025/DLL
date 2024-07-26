@@ -79,3 +79,5 @@ jobs:
         commit_message: 'DOC: Update development documentation'
         keep_files: true
         force_orphan: true
+      permissions:
+        contents: write
