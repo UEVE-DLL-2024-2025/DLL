@@ -73,7 +73,7 @@ jobs:
       if: contains(github.ref, 'refs/heads/main')
       uses: peaceiris/actions-gh-pages@v4
       with:
-        publish_dir: .
+        publish_dir: version/dev
         publish_branch: gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
         commit_message: 'DOC: Update development documentation'
