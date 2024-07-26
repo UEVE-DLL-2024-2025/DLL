@@ -53,6 +53,8 @@ jobs:
     needs: doc-build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
     - name: Clean destination folder
@@ -79,5 +81,3 @@ jobs:
         commit_message: 'DOC: Update development documentation'
         keep_files: true
         force_orphan: true
-      permissions:
-          contents: write
