@@ -70,6 +70,7 @@ jobs:
       run: |
         ls -R version/dev
     - name: Deploy to gh-pages branch
+      if: contains(github.ref, 'refs/heads/main')
       uses: JamesIves/github-pages-deploy-action@v4.6.3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
