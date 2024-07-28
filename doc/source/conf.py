@@ -4,7 +4,10 @@ sys.path.insert(0, os.path.abspath('../../src'))
 
 project = 'Demineur'
 author = 'SMoraisDev'
-release = '0.0.1'
+version = None
+with open("../../src/VERSION") as f:
+    version = f.readlines()[0]
+release = version
 
 extensions = [
     'sphinx.ext.autodoc',
