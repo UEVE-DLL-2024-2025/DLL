@@ -327,24 +327,37 @@ Connaissez-vous des règles associées au changement d'un numéro de version ? S
 
 ---
 
-# Gestion de sémantique de version
+# Calendar Versioning (CalVer)
 
 </br>
 
-Connaissez-vous des règles associées au changement d'un numéro de version ? Sont-elles les mêmes pour le nombre micro / mineur / majeur ?!
+Convention de version basée sur le calendrier de publication de votre projet au lieu de nombres arbitraires.
 
-</br>
+Examples:
 
-La politique que nous allons voir est largement utilisée et formalisée !
-**Lien** : https://semver.org/spec/v2.0.0.html
-
-</br>
-
-La sémantique associée au changement de version est liée aux notions de compatibilité descendante (rétrocompatibilité) et ascendante.
+- **Ubuntu**: YY.0M.MICRO, e.g 4.10.LTS (Octobre 2004 Long Time Support)
+- **certify**: YYYY.MM.DD, e.g. 2024.8.30
+- **????**: 0Y.WW.MICRO, e.g. 09.52.1 (Derniere semaine de 2009)
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
+
+Convention de version basée sur les notions de compatibilité descendante (rétrocompatibilité) et ascendante.
+
+Politique largement utilisée par la communauté et formalisée !
+
+**Lien** : https://semver.org/spec/v2.0.0.html
+
+---
+
+# Semantic Versioning (SemVer)
+
+Quels sens donnez-vous à ces mots (compatibilité descendante et ascendante) ?
+
+---
+
+# Semantic Versioning (SemVer)
 
 Quels sens donnez-vous à ces mots (compatibilité descendante et ascendante) ?
 
@@ -356,7 +369,7 @@ Quels sens donnez-vous à ces mots (compatibilité descendante et ascendante) ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 Quels sens donnez-vous à ces mots (compatibilité descendante et ascendante) ?
 
@@ -369,7 +382,7 @@ Dans ce cas, la mise à jour **n'assure pas une compatibilité ascendante**. On 
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 </br>
 
@@ -379,7 +392,7 @@ Connaissez-vous des exemples de telles modifications ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 </br>
 
@@ -391,7 +404,7 @@ Connaissez-vous des exemples de telles modifications ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 </br>
 
@@ -401,7 +414,7 @@ Connaissez-vous des exemples de telles modification ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 </br>
 
@@ -415,7 +428,7 @@ Connaissez-vous des exemples de telles modification ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 </br>
 
@@ -423,7 +436,7 @@ Modification apportée au numéro majeur : marque la modification des repères d
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 </br>
 
@@ -435,7 +448,7 @@ Connaissez-vous des exemples de telles modification ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 **[Autre exemple illustratif]** Projet qui est une application gérant un format de données écrit sur disque (ou autre sockage permanent) : les formats que lit / écrit le logiciel doivent suivre les directives de compatibilité !
 
@@ -448,13 +461,13 @@ La version 2.6.0 doit pouvoir lire les fichiers écrits par la 2.5.4
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 Cette approche de gestion des versions ne vient pas sans inconvénient. D'après vous, quel est-il ?
 
 ---
 
-# Gestion de sémantique de version
+# Semantic Versioning (SemVer)
 
 Cette approche de gestion des versions ne vient pas sans inconvénient. D'après vous, quel est-il ?
 
@@ -468,27 +481,13 @@ Gênant lorsque vous souhaité faire des modifications qui ne peuvent être réa
 
 ---
 
-# Gestion de sémantique de version
-
-
-En résumé, **publier une politique de compatibilité des versions et y adhérer est un point incontournable de la distribution de logiciels**
-:warning: Une mauvaise surprise peut vous aliéner de nombreux utilisateurs (@moi : expérience pro)
-
-**[Avis personnel]** Utilisez la numérotation présentée car :
-- elle est déjà très répandue;
-- elle est facile à expliquer et à retenir !
-
-:thought_balloon: Ces règles ne s'applique généralement pas aux versions antérieures à la 1.0. Il est *"accepté"* de pouvoir passer de 0.1 → 0.2 → 0.3 avec des différences arbitrairement importantes.
-
----
-
 <style scoped>
   section {
     font-size: 28px;
   }
 </style>
 
-# La convention de numérotation paire / impaire
+# Odd-Even Versioning (OddEven Ver)
 
 Connaissez vous une numérotation qui attache de la sémantique aux numéros pairs et impairs ?
 
@@ -500,7 +499,7 @@ Connaissez vous une numérotation qui attache de la sémantique aux numéros pai
   }
 </style>
 
-# La convention de numérotation paire / impaire
+# Odd-Even Versioning (OddEven Ver)
 
 Connaissez vous une numérotation qui attache de la sémantique aux numéros pairs et impairs ?
 
@@ -513,6 +512,34 @@ Utiliser la parité du nombre mineur pour indiquer la stabilité du logiciel, i.
 - Tout le monde comprend que :
   - "1.2.2" est "sûre" à installer sur un serveur web en ligne;
   - "1.3.1" devrait rester confinée à des stations de travail expérimentales.
+
+---
+
+# Intended Effort Versioning (EffVer)
+
+Convention de version basée sur la quantité d'effort qu'un utilisateur doit mettre pour adopter la nouvelle version.
+
+Macro.Meso.Micro : Gros efforts .  Quelques effort . Pas d'effort
+
+Examples de changements:
+
+- micro : correctif de petit bogue / nouvelle fonctionnalité;
+- meso : gros bogue accoutumié des utilisateurs / changement cassant dans une fonctionnalité
+- macro : gros changement cassant / gros aspects du projet
+
+Liens: https://news.ycombinator.com/item?id=39400576 et https://jacobtomlinson.dev/effver/
+
+---
+
+# Gestion de sémantique de version
+
+En résumé, **publier une politique de compatibilité des versions et y adhérer est un point incontournable de la distribution de logiciels**
+
+:warning: Une mauvaise surprise peut vous aliéner de nombreux utilisateurs
+
+**[Avis personnel]** Utilisez le SemVer car cette sémantique est déjà très répandue tout en étant facile à expliquer et à retenir !
+
+:thought_balloon: Ces règles ne s'applique généralement pas aux versions antérieures à la 1.0. Il est *"accepté"* de pouvoir passer de 0.1 → 0.2 → 0.3 avec des différences arbitrairement importantes.
 
 ---
 
@@ -668,7 +695,16 @@ A votre avis, comment est gérée la création de branche de version ?
 - aux utilisateurs / administrateurs conservateurs de ne pas faire de grand saut sans préparation minutieuse;
 - aux aventuriers d'obtenir les dernières fonctionnalités au prix d'une possible instabilité.
 
-**Demo master / release 1.1.x**
+---
+
+# Démonstration en direct
+
+Points à aborder :
+
+- Liens entre *main* et *release/2.3*
+- Liens entre *tag* et *CICD*
+- Rêgles associées aux branches et tags
+- Secrets
 
 ---
 
@@ -1281,6 +1317,20 @@ L'indicateur rc avertira les utilisateurs conservateurs d’attendre !
 
 ---
 
+# Publication  par éditeur de confiance
+
+Concept utilisé par les écosystèmes de gestion de packages de Python (PyPI), JavaScript (npm), ...
+
+Un éditeur ou une organisation qui a été vérifié et identifié comme digne de confiance par la plateforme de gestion de packages. 
+
+**Objectif**: éliminer le besoin de jetons et mots de passe à longue durée de vie !
+
+:thought_balloon: Réduction du risque d'attaques de la chaîne d'approvisionnement et de fuites de données d'identification, tout en rationalisant le workflow de publication.
+
+:thought_balloon: Fonctionnement basé sur [OpenID Connect](https://openid.net/developers/how-connect-works/) (OIDC), une norme ouverte d'attestation et de vérification d'identité fondée sur [OAuth2](https://oauth.net/2/). 
+
+---
+
 </br></br></br></br></br>
 
 # V.6 – Gérer plusieurs versions
@@ -1330,6 +1380,7 @@ Dans ce contexte, comment inciter à la transition vers une version
 mineure / majeure plus récente ?
 
 :thought_balloon: Déclarez la série 1.0.x en fin de vie et annoncez le officiellement !
+
 **Objectif** : notifier les utilisateurs pour qu’ils prennent des décisions sur la mise à jour
 
 ---
