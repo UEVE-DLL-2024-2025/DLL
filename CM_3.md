@@ -313,7 +313,7 @@ L’utilisation d’une liste de diffusion / d’un forum de discussion est-il n
 - Petite / moyen / simple : pas forcément nécessaire, possible utilisation du gestionnaire de bogues comme substitue
 - Large / comple : Nécessaire pour les discussion qui ne sont pas spécifiques à un bogue (laisser le gestionnaire de bogues focaliser sur les bogues)
 
-:thought_balloon: Les moyens de discussion modernes permettent l’accessibilité croisée des forums et des listes de diffusions (et vice versa) ! Exemple de service l’ayant établi Google Groups https://groups.google.com/ et Discourse http://www.discourse.org/
+:thought_balloon: Les moyens de discussion modernes permettent l’accessibilité croisée des forums et des listes de diffusions (et vice versa) ! Exemple de service l’ayant établi [Google Groups](https://groups.google.com/) et [Discourse](http://www.discourse.org/)
 
 ---
 
@@ -963,9 +963,7 @@ Qu’elle approche serait préférable ?
 :thought_balloon: Si le projet a évolué, cela peut être ignoré pour simplifier la discussion
 - Présentation du changement : différences entre source et modifications
 - En pratique : action réalisable via le site d'hébergement
-- Autre possibilité : contribution via un outil de révision de code collaboratif
-→ Gerrit https://en.wikipedia.org/wiki/Gerrit_%28software%29
-→ ReviewBoard https://www.reviewboard.org/
+- Autre possibilité : contribution via un outil de révision de code collaboratif tel que [Gerrit](https://en.wikipedia.org/wiki/Gerrit_%28software%29) ou [ReviewBoard] (https://www.reviewboard.org/)
 
 :thought_balloon: Certains projets préfèrent encore travailler par envoie de patchs par email
 
@@ -1258,6 +1256,17 @@ Exemple du saut de ligne (EOL):
 **Solution** : gitattributes pour utiliser Git et modifier le comportement par défaut de certaines opérations sur les fichiers et répertoires.
 Exemple : https://github.com/ansys/pyaedt/blob/main/.gitattributes
 Documentation : https://www.git-scm.com/docs/gitattributes
+
+---
+
+# Ignorer des révisions Git
+
+Contexte : utilisation de `git blame` pour récupérer des informations sur le dernier changement ayant impacté une ligne de code.
+
+Problème : L'utilisation de formatteur automatique...
+
+Exemple en direct avec `git blame --ignore-revs-file .git-blame-ignore-vers` (twinbuilder L129) en CLI.
+Intégré dans Visual Studio Code avec [Gitlens v13.4](https://help.gitkraken.com/gitlens/gitlens-release-notes-current/#version-13-4) et dans [Github](https://docs.github.com/fr/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view) !
 
 ---
 

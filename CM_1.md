@@ -63,13 +63,13 @@ Focalisation sur les problèmes associés au développement de logiciel libre.
 **Cours**: 7 séances de 3 heures (pas de TD / TP)
 <br/>
 
-**Planning**: ??/09 + ??/09 + ??/09 + ??/10 + ??/10 + ??/10 + ??/10
+**Planning**: 11/09 + 18/09 + 02/10 + 09/10 + 16/10 + 06/11 + 04/12
 <br/>
 
 **Exercice pratique**: contribution à https://github.com/UEVE-DLL-2024-2025/DLL
 <br/>
 
-**Examen**: ??/??
+**Examen**: 16/12
 -> questions de cours & mock de contribution open source 
  
 
@@ -750,7 +750,7 @@ Idée fausse la plus répandue : contribuer au libre / à l'open source signifie
 
 # Qu'est ce que veut dire contribuer au libre / open source ?
 
-- Vous aimez coder ?
+- Vous aimez **coder** ?
   
   - résoudre une issue ouverte;
   
@@ -766,7 +766,7 @@ Idée fausse la plus répandue : contribuer au libre / à l'open source signifie
 
 # Qu'est ce que veut dire contribuer au libre / open source ?
 
-- Vous aimez planifier des événements ?
+- Vous aimez **planifier des événements** ?
   - organiser des ateliers / rencontres autours du projet
   - plannifier une conférence sur le projet (si elle existe)
 
