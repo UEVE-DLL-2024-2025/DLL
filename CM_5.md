@@ -1403,7 +1403,7 @@ Contexte particulier car :
 - Le bogue ne doit pas être rendu publique tant que la version n’est pas disponible
 - Le correctif ne doit pas être introduit dans le référentiel ET la version ne peut pas être testée publiquement !
 
-=> Il est important de partir d’une version existante et d’ajouter les correctifs sans autres modifications !
+=> Il est important de partir d'une version existante et d’ajouter les correctifs sans autres modifications !
 :thought_balloon: Des modifications non testées pourraient être la source de nouveaux bogues
 
 ---
@@ -1426,6 +1426,28 @@ Comment est introduit une version de sécurité dans le flot des versions prévu
 
 - Autre solution : ajouter un composant supplémentaire au numéro de version, e.g. la version 2.3.0 devient 2.3.0.1
 :thought_balloon: Plus rarement utilisé car rompt avec la numérotation à trois composants
+
+---
+
+# Version de sécurité (extra slide)
+
+Connaissez vous des méthodes pour auditer votre code ?
+
+---
+
+# Version de sécurité (extra slide)
+
+Connaissez vous des méthodes pour auditer votre code ?
+
+Exemples d'outils d'analyse pour paquet Python:
+
+- [Safety](https://pypi.org/project/safety/) : vérifie les dépendances d'un projet pour identifier les paquets vulnérables. Compare les paquets à une base de données de vulnérabilités connues.
+
+  Equivalent dans d'autres langages : [npm audit](https://docs.npmjs.com/auditing-package-dependencies-for-security-vulnerabilities), [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/), ...
+
+- [Bandit](https://bandit.readthedocs.io/en/latest/) : analyse statique du code pour identifier des failles potentielles, e.g. injections SQL, fonction dangeureuse, gestion incorrecte des fichiers, ...
+
+  Equivalent dans d'autres langages : [NodeJSSCan](https://opensecurity.in/), [FlawFinder](https://dwheeler.com/flawfinder/), ...  
 
 ---
 
