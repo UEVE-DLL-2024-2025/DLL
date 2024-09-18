@@ -9,7 +9,7 @@ def load_commit_types():
     # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.realpath(__file__))
     # Build the full path to the commit-type.json file
-    json_file_path = os.path.join(script_dir, "commit-type.json")
+    json_file_path = os.path.join(script_dir, "commit_type.json")
 
     # Read the JSON file and extract commit types
     with open(json_file_path, "r") as f:

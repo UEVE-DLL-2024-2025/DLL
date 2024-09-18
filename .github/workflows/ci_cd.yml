@@ -22,7 +22,7 @@ jobs:
           python-version: '3.x'
       - name: Validate commit messages
         run: |
-          git log --pretty=format:"%s" | head -n 1 | python .github/scripts/validate-commit-msg.py
+          git log --pretty=format:"%s" | head -n 1 | python .github/scripts/validate_commit_msg.py
 
   lint:
     runs-on: ubuntu-latest
