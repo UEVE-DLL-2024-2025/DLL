@@ -1,6 +1,8 @@
+"""Module providing Random variable generators."""
 import random
 
 class Demineur:
+    """Class representing a Deminer game"""
 
     def __init__(self, nombre_mines=10):
         self.taille = 10
@@ -36,6 +38,7 @@ class Demineur:
                 self.grille[y][x] = str(mines_autour)
 
     def decouvrir_cases(self, x, y):
+        """A Function to uncover a cell"""
         if self.grille_visible[y][x] != '.':
             return
 
@@ -48,10 +51,12 @@ class Demineur:
             self.decouvrir_cases(x, y + 1)
 
     def afficher_grille(self):
+        """A Function to show the game's board"""
         for ligne in self.grille_visible:
             print(' '.join(ligne))
 
     def jouer(self):
+        """A Function to launch the game"""
         while True:
             self.afficher_grille()
             x, y = map(int, input("Entrez les coordonnees x et y separees par un espace: ").split())
