@@ -11,6 +11,19 @@ on:
 
 jobs:
 
+  lint_commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Validate commit messages
+        run: |
+          git log --pretty=format:"%s" | head -n 1 | python .github/scripts/validate-commit-msg.py
+
   lint:
     runs-on: ubuntu-latest
     steps:
