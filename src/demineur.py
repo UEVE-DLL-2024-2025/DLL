@@ -50,11 +50,10 @@ class Demineur:
             self.decouvrir_cases(x, y - 1)
             self.decouvrir_cases(x, y + 1)
 
-    def afficher_grille(self, moves=None): # added a move counter parameter  
+    def afficher_grille(self, moves=None):# added a move counter parameter  
         """A Function to show the game's board"""
         if moves is not None:  # is moves provided
             print(f"Nombre de coups: {moves}")  # display moves
-        
         for ligne in self.grille_visible:
             print(' '.join(ligne))
 
