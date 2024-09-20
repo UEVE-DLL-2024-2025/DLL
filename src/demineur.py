@@ -50,7 +50,7 @@ class Demineur:
             self.decouvrir_cases(x, y - 1)
             self.decouvrir_cases(x, y + 1)
 
-    def afficher_grille(self, moves=None):# added a move counter parameter  
+    def afficher_grille(self, moves=None):  # added a move counter parameter
         """A Function to show the game's board"""
         if moves is not None:  # is moves provided
             print(f"Nombre de coups: {moves}")  # display moves
@@ -61,14 +61,14 @@ class Demineur:
         """A Function to launch the game"""
         moves = 0  # initialize moves counter
         while True:
-            self.afficher_grille(moves)# pass moves to afficher_grille
+            self.afficher_grille(moves)  # pass moves to afficher_grille
             x, y = map(int, input("Entrez les coordonnees x et y separees par un espace: ").split())
             if self.grille[y][x] == 'M':
                 print("Perdu !")
                 break
 
             self.decouvrir_cases(x, y)
-            moves += 1 # increment moves
+            moves += 1  # increment moves
             if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
                 break
