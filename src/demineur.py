@@ -17,8 +17,10 @@ class Demineur:
         while mines_placees < self.nombre_mines:
             x = random.randint(0, self.taille - 1)
             y = random.randint(0, self.taille - 1)
-            self.grille[y][x] = 'M'
-            mines_placees += 1
+            # Vérification pour éviter les doublons de mines
+            if self.grille[y][x] != 'M':
+                self.grille[y][x] = 'M'
+                mines_placees += 1
 
     def __calculer_indices(self):
         for y in range(self.taille):
