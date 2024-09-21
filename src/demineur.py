@@ -40,17 +40,21 @@ class Demineur:
                 self.grille[y][x] = str(mines_autour)
 
     def decouvrir_cases(self, x, y):
-        """A Function to uncover a cell"""
+        # Vérification des bornes
+        if not (0 <= x < self.taille and 0 <= y < self.taille):
+            return
         if self.grille_visible[y][x] != '.':
             return
 
         self.grille_visible[y][x] = self.grille[y][x]
 
         if self.grille[y][x] == '0':
-            self.decouvrir_cases(x - 1, y)
-            self.decouvrir_cases(x + 1, y)
-            self.decouvrir_cases(x, y - 1)
-            self.decouvrir_cases(x, y + 1)
+            # Découverte récursive des voisins
+            for dy in range(-1, 2):
+                for dx in range(-1, 2):
+                    if dx != 0 or dy != 0:  # Ne pas redécouvrir la case actuelle
+                        self.decouvrir_cases(x + dx, y + dy)
+
 
     def afficher_grille(self):
         """A Function to show the game's board"""
