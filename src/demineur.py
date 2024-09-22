@@ -52,15 +52,22 @@ class Demineur:
             print(' '.join(ligne))
 
     def jouer(self):
-        while True:
+        game_in_progress = True
+        while game_in_progress:
             self.afficher_grille()
             x, y = map(int, input("Entrez les coordonnees x et y separees par un espace: ").split())
             if self.grille[y][x] == 'M':
+                #Display the grid with the mine visible
+                self.decouvrir_cases(x, y)
+                self.afficher_grille()
                 print("Perdu !")
-
+                #End the game
+                game_in_progress = False
             self.decouvrir_cases(x, y)
             if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
+                #End the game
+                game_in_progress = False
 
 
 if __name__ == "__main__":

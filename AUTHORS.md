@@ -7,3 +7,4 @@
 ## Contributors
 
 - Billy, LeGoat, billy.legoat@testpascetteadresse.fr
+- Samy, FERGUI
