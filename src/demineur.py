@@ -72,8 +72,8 @@ class Demineur:
         # Demande si le joueur souhaite recommencer une partie
         restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
         if restart == 'oui':
-            self.__init__(self.nombre_mines) 
-            self.jouer()  
+            self.__init__(self.nombre_mines)
+            self.jouer()
         else:
             print("Partie terminée !")
 
