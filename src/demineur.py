@@ -66,6 +66,15 @@ class Demineur:
             self.decouvrir_cases(x, y)
             if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
+                break
+
+        # Demande si le joueur souhaite recommencer une partie
+        restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
+        if restart == 'oui':
+            jeu = Demineur(self.nombre_mines)
+            jeu.jouer()
+        else:
+            print("Partie terminée !")
 
 
 if __name__ == "__main__":
