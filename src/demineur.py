@@ -68,11 +68,11 @@ class Demineur:
             if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
                 break
-    
+
         # Demande si le joueur souhaite recommencer une partie
         restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
         if restart == 'oui':
-            self.nombre_mines
+            self.__init__(self.nombre_mines)
             self.jouer()
         else:
             print("Partie terminée !")
