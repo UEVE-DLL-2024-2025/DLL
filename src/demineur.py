@@ -39,6 +39,11 @@ class Demineur:
 
     def decouvrir_cases(self, x, y):
         """A Function to uncover a cell"""
+
+        # check if the cell is out of the grid
+        if x < 0 or y < 0 or x >= self.taille or y >= self.taille:
+            return
+
         if self.grille_visible[y][x] != '.':
             return
 
