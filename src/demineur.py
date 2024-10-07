@@ -69,12 +69,17 @@ class Demineur:
                 break
 
         # Demande si le joueur souhaite recommencer une partie
-        restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
-        if restart == 'oui':
-            jeu = Demineur(self.nombre_mines)
-            jeu.jouer()
-        else:
-            print("Partie terminée !")
+        while True:
+            restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
+            if restart == 'oui':
+                nouveau_jeu = Demineur(self.nombre_mines)
+                nouveau_jeu.jouer()
+                break
+            elif restart == 'non':
+                print("Partie terminée !")
+                break
+            else:
+                print("Réponse invalide, veuillez répondre par 'oui' ou 'non'.")
 
 
 if __name__ == "__main__":
