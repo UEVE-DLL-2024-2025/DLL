@@ -1,10 +1,14 @@
 """Module providing Random variable generators."""
 import random
+import json
+import os
+from statistiques import Statistiques
 
 class Demineur:
     """Class representing a Deminer game"""
 
-    def __init__(self, difficulte='moyen'):
+
+    def __init__(self, fichier_sauvegarde='demineur.json', difficulte='moyen'):
         """
         Initialize the game with a grid and place mines based on difficulty level.
 
@@ -26,6 +30,8 @@ class Demineur:
 
         self.grille = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
         self.grille_visible = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
+        self.statistiques = Statistiques()
+        self.fichier_sauvegarde = fichier_sauvegarde
         self.__placer_mines()
         self.__calculer_indices()
 
@@ -73,10 +79,28 @@ class Demineur:
         for ligne in self.grille_visible:
             print(' '.join(ligne))
 
+    def charger_jeu(self):
+        """
+        Load the game state from a JSON file.
+        """
+        if os.path.exists(self.fichier_sauvegarde):
+            with open(self.fichier_sauvegarde, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                self.taille = data.get('taille', 10)
+                self.nombre_mines = data.get('nombre_mines', 10)
+                self.grille = data.get(
+                    'grille', [['.' for _ in range(self.taille)] for _ in range(self.taille)]
+                )
+                self.grille_visible = data.get(
+                    'grille_visible', 
+                    [['.' for _ in range(self.taille)] for _ in range(self.taille)]
+                )
+
     def jouer(self):
         """A Function to launch the game"""
 
         game_in_progress = True
+        self.statistiques.start_timer()
         while game_in_progress:
             self.afficher_grille()
             x, y = map(int, input("Entrez les coordonnees x et y separees par un espace: ").split())
@@ -87,17 +111,28 @@ class Demineur:
                 print("Perdu !")
                 #End the game
                 game_in_progress = False
+                temps_ecoule = self.statistiques.stop_timer()
+                self.statistiques.record_loss()
+                break
+
             self.decouvrir_cases(x, y)
             if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
                 #End the game
                 game_in_progress = False
+                temps_ecoule = self.statistiques.stop_timer()
+                self.statistiques.record_victory()
+                break
+
+        print(f"Temps écoulé: {temps_ecoule:.2f} secondes")
+        self.statistiques.display_statistics()
 
 
 if __name__ == "__main__":
     niveau_difficulte = input("Choisissez un niveau de difficulte (facile, moyen, difficile): ")
     try:
         jeu = Demineur(niveau_difficulte)
+        jeu.charger_jeu()
         jeu.jouer()
     except ValueError as e:
         print(e)
