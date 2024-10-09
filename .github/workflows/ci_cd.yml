@@ -11,6 +11,23 @@ on:
 
 jobs:
 
+  lint_commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch at least 2 commits to ensure we get non-merge commits
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate commit messages
+        run: |
+          # Get the last non-merge commit and validate the message
+          git log --pretty=format:"%s" --no-merges -n 1 | python .github/scripts/validate_commit_msg.py
+
+
   lint:
     runs-on: ubuntu-latest
     steps:
