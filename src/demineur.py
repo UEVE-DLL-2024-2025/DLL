@@ -4,9 +4,26 @@ import random
 class Demineur:
     """Class representing a Deminer game"""
 
-    def __init__(self, nombre_mines=10):
-        self.taille = 10
-        self.nombre_mines = nombre_mines
+    def __init__(self, difficulte='moyen'):
+        """
+        Initialize the game with a grid and place mines based on difficulty level.
+
+        :param difficulte: Difficulty level of the game ('facile', 'moyen', 'difficile').
+        :raises ValueError: If the difficulty level is not one of 'facile', 'moyen', or 'difficile'.
+        """
+        if difficulte not in ['facile', 'moyen', 'difficile']:
+            raise ValueError("Le niveau de difficulté doit être 'facile', 'moyen' ou 'difficile'.")
+
+        if difficulte == 'facile':
+            self.taille = 8
+            self.nombre_mines = 10
+        elif difficulte == 'difficile':
+            self.taille = 16
+            self.nombre_mines = 40
+        else:  # moyen
+            self.taille = 10
+            self.nombre_mines = 20
+
         self.grille = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
         self.grille_visible = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
         self.__placer_mines()
@@ -78,5 +95,9 @@ class Demineur:
 
 
 if __name__ == "__main__":
-    jeu = Demineur()
-    jeu.jouer()
+    niveau_difficulte = input("Choisissez un niveau de difficulte (facile, moyen, difficile): ")
+    try:
+        jeu = Demineur(niveau_difficulte)
+        jeu.jouer()
+    except ValueError as e:
+        print(e)
