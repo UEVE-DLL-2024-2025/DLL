@@ -128,6 +128,18 @@ class Demineur:
         self.statistiques.display_statistics()
 
 
+        # Demande si le joueur souhaite recommencer une partie
+        while True:
+            restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
+            if restart == 'oui':
+                nouveau_jeu = Demineur(self.nombre_mines)
+                nouveau_jeu.jouer()
+                break
+            if restart == 'non':
+                print("Partie terminée !")
+                break
+            print("Réponse invalide, veuillez répondre par 'oui' ou 'non'.")
+
 if __name__ == "__main__":
     niveau_difficulte = input("Choisissez un niveau de difficulte (facile, moyen, difficile): ")
     try:
