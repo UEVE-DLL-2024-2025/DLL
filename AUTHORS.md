@@ -14,3 +14,4 @@
 - Alexandre ANTUNES MENDES, antunesmendes.alexandre@gmail.com
 - Jimmy, Levacher, levacher.jimmy.pro@gmail.com
 - Sebastien, LAFRIZI, slafrizi@gmail.com
+- Davinson, DOGLAS PRINCE, doglasprincedavinson@gmail.com

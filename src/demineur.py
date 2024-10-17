@@ -17,7 +17,6 @@ class Demineur:
         """
         if difficulte not in ['facile', 'moyen', 'difficile']:
             raise ValueError("Le niveau de difficulté doit être 'facile', 'moyen' ou 'difficile'.")
-
         if difficulte == 'facile':
             self.taille = 8
             self.nombre_mines = 10
@@ -27,11 +26,11 @@ class Demineur:
         else:  # moyen
             self.taille = 10
             self.nombre_mines = 20
-
         self.grille = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
         self.grille_visible = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
         self.statistiques = Statistiques()
         self.fichier_sauvegarde = fichier_sauvegarde
+        self.marques = set()
         self.__placer_mines()
         self.__calculer_indices()
 
@@ -49,7 +48,6 @@ class Demineur:
             for x in range(self.taille):
                 if self.grille[y][x] == 'M':
                     continue
-
                 mines_autour = 0
                 for dx in range(y - 1, y + 2):
                     for dy in range(x - 1, x + 2):
@@ -58,16 +56,18 @@ class Demineur:
                             continue
                         if self.grille[ny][nx] == 'M':
                             mines_autour += 1
-
                 self.grille[y][x] = str(mines_autour)
 
     def decouvrir_cases(self, x, y):
         """A Function to uncover a cell"""
+        # Vérifier si les coordonnées sont dans les limites de la grille
+        if not (0 <= x < self.taille and 0 <= y < self.taille):
+            return
+        if self.grille_visible[y][x] == 'F':
+            self.grille_visible[y][x] = self.grille[y][x]
         if self.grille_visible[y][x] != '.':
             return
-
         self.grille_visible[y][x] = self.grille[y][x]
-
         if self.grille[y][x] == '0':
             self.decouvrir_cases(x - 1, y)
             self.decouvrir_cases(x + 1, y)
@@ -95,18 +95,42 @@ class Demineur:
                     'grille_visible', 
                     [['.' for _ in range(self.taille)] for _ in range(self.taille)]
                 )
+    def marquer_case(self, x, y):
+        """ Mark or unmark a cell with a flag. """
+        if not (0 <= x < self.taille and 0 <= y < self.taille):
+            return
+        if self.grille_visible[y][x] == 'F':
+            self.grille_visible[y][x] = '.'
+        elif self.grille_visible[y][x] == '.':
+            self.grille_visible[y][x] = 'F'
+        else:
+            print("La case est déjà découverte et ne peut pas être marquée.")
 
     def jouer(self):
-        """A Function to launch the game"""
-
+        """A Function to launch the game."""   
         game_in_progress = True
         self.statistiques.start_timer()
         while game_in_progress:
             self.afficher_grille()
-            x, y = map(int, input("Entrez les coordonnees x et y separees par un espace: ").split())
+            try:
+                entree = input("'f x y' pour marquer/démarquer ou 'x y' pour découvrir : ").split()
+                if len(entree) == 3 and entree[0] == 'f':
+                    # Mark/unmark the cells
+                    x, y = map(int, entree[1:])
+                    self.marquer_case(x, y)
+                    continue
+                if len(entree) == 2:
+                    # Discover the cells
+                    x, y = map(int, entree)
+                else:
+                    print("Error, entrer les coordonnées sous la forme 'x y' ou 'f x y'.")
+                    continue
+            except ValueError:
+                print("Coordonnées invalides. Veuillez réessayer.")
+                continue
             if self.grille[y][x] == 'M':
                 #Display the grid with the mine visible
-                self.decouvrir_cases(x, y)
+                self.decouvrir_cases(x,y)
                 self.afficher_grille()
                 print("Perdu !")
                 #End the game
@@ -114,7 +138,6 @@ class Demineur:
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_loss()
                 break
-
             self.decouvrir_cases(x, y)
             if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
@@ -123,7 +146,6 @@ class Demineur:
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_victory()
                 break
-
         print(f"Temps écoulé: {temps_ecoule:.2f} secondes")
         self.statistiques.display_statistics()
 
