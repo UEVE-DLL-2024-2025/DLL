@@ -96,6 +96,20 @@ class Demineur:
                     [['.' for _ in range(self.taille)] for _ in range(self.taille)]
                 )
 
+    def sauvegarder_jeu(self):
+        """
+        Save the current game state to a JSON file.
+        """
+        data = {
+            'taille': self.taille,
+            'nombre_mines': self.nombre_mines,
+            'grille': self.grille,
+            'grille_visible': self.grille_visible,
+        }
+        with open(self.fichier_sauvegarde, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
+        print(f"Jeu sauvegardé dans {self.fichier_sauvegarde}.")
+
     def jouer(self):
         """A Function to launch the game"""
 
@@ -103,7 +117,23 @@ class Demineur:
         self.statistiques.start_timer()
         while game_in_progress:
             self.afficher_grille()
-            x, y = map(int, input("Entrez les coordonnees x et y separees par un espace: ").split())
+
+            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées.")
+            choix = input((
+                'Entrez les coordonnees x et y separees par un espace ou '
+                "'save' pour sauvegarder: "
+            ))
+
+            if choix.lower() == 'save':
+                self.sauvegarder_jeu()
+                continue
+
+            try:
+                x, y = map(int, choix.split())
+            except ValueError:
+                print("Entrée invalide. Essayez à nouveau.")
+                continue
+
             if self.grille[y][x] == 'M':
                 #Display the grid with the mine visible
                 self.decouvrir_cases(x, y)
