@@ -2,6 +2,7 @@
 import random
 import json
 import os
+import time
 from statistiques import Statistiques
 
 class Demineur:
@@ -34,6 +35,7 @@ class Demineur:
         self.fichier_sauvegarde = fichier_sauvegarde
         self.__placer_mines()
         self.__calculer_indices()
+        self.mouvements = 0
 
     def __placer_mines(self):
         mines_placees = 0
@@ -67,6 +69,7 @@ class Demineur:
             return
 
         self.grille_visible[y][x] = self.grille[y][x]
+        self.mouvements += 1
 
         if self.grille[y][x] == '0':
             self.decouvrir_cases(x - 1, y)
@@ -78,6 +81,12 @@ class Demineur:
         """A Function to show the game's board"""
         for ligne in self.grille_visible:
             print(' '.join(ligne))
+        
+        mines_restantes = self.nombre_mines - sum(row.count('M') for row in self.grille_visible)
+        temps_ecoule = int(time.time() - self.statistiques.timer_start) if self.statistiques.timer_start else 0
+        minutes, seconds = divmod(temps_ecoule, 60)
+        hours, minutes = divmod(minutes, 60)
+        print(f"\nMines restantes: {mines_restantes} | Mouvements: {self.mouvements} | Temps: {hours:02}:{minutes:02}:{seconds:02}")
 
     def charger_jeu(self):
         """
