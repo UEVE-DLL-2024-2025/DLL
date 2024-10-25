@@ -88,6 +88,22 @@ class Demineur:
         hours, minutes = divmod(minutes, 60)
         print(f"\nMines restantes: {mines_restantes} | Mouvements: {self.mouvements} | Temps: {hours:02}:{minutes:02}:{seconds:02}")
 
+        mines_restantes = self.nombre_mines - sum(row.count('M') for row in self.grille_visible)
+
+        if self.statistiques.timer_start:
+            temps_ecoule = int(time.time() - self.statistiques.timer_start)
+        else:
+            temps_ecoule = 0
+
+        hours, remainder = divmod(temps_ecoule, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        print(
+            f"\nMines restantes: {mines_restantes} | "
+            f"Mouvements: {self.mouvements} | "
+            f"Temps: {hours:02}:{minutes:02}:{seconds:02}"
+)
+
     def charger_jeu(self):
         """
         Load the game state from a JSON file.
