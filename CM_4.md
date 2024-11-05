@@ -1160,11 +1160,7 @@ Le rôle du responsable de tickets est d'aider à **clarifier la base de donnée
 :thought_balloon: Le nombre de tickets suivis dans l'outil de gestion des bogues augmente proportionnellement au nombre d'utilisateurs
 => Augmentation *"sans fin"* du nombre de tickets ouverts
 
-<<<<<<< Updated upstream
 Une des tâches courante du gestionnaire est de **gérer les *"mauvais"* tickets** :
-=======
-Une des tâches les plus courantes du gestionnaire est de **gérer les *"mauvais"* tickets**:
->>>>>>> Stashed changes
 - limiter le nombre de tickets incomplets ou mal écrits, e.g. des champs du formulaire ne sont pas correctement remplis
 - limiter le nombre de tickets doublons
 
