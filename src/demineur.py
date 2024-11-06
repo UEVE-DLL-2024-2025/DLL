@@ -26,8 +26,9 @@ class Demineur:
         else:  # moyen
             self.taille = 10
             self.nombre_mines = 20
-        self.grille = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
-        self.grille_visible = [['.' for _ in range(self.taille)] for _ in range(self.taille)]
+
+        self.grille = [['■' for _ in range(self.taille)] for _ in range(self.taille)]
+        self.grille_visible = [['■' for _ in range(self.taille)] for _ in range(self.taille)]
         self.statistiques = Statistiques()
         self.fichier_sauvegarde = fichier_sauvegarde
         self.marques = set()
@@ -65,7 +66,7 @@ class Demineur:
             return
         if self.grille_visible[y][x] == 'F':
             self.grille_visible[y][x] = self.grille[y][x]
-        if self.grille_visible[y][x] != '.':
+        if self.grille_visible[y][x] != '■':
             return
         self.grille_visible[y][x] = self.grille[y][x]
         if self.grille[y][x] == '0':
@@ -76,8 +77,9 @@ class Demineur:
 
     def afficher_grille(self):
         """A Function to show the game's board"""
-        for ligne in self.grille_visible:
-            print(' '.join(ligne))
+        print("    "+ " ".join([str(i) for i in range(self.taille)]))
+        for idx, ligne in enumerate(self.grille_visible):
+            print(f"{idx:2}| " + ' '.join(ligne) + " |")
 
     def charger_jeu(self):
         """
@@ -111,6 +113,7 @@ class Demineur:
         game_in_progress = True
         self.statistiques.start_timer()
         while game_in_progress:
+            print("\n [ Bienvenue au Démineur ! ] \n")
             self.afficher_grille()
             try:
                 entree = input("'f x y' pour marquer/démarquer ou 'x y' pour découvrir : ").split()
@@ -139,7 +142,7 @@ class Demineur:
                 self.statistiques.record_loss()
                 break
             self.decouvrir_cases(x, y)
-            if sum(row.count('.') for row in self.grille_visible) == self.nombre_mines:
+            if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
                 #End the game
                 game_in_progress = False
