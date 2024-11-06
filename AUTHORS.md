@@ -16,3 +16,4 @@
 - Sebastien, LAFRIZI, slafrizi@gmail.com
 - Davinson, DOGLAS PRINCE, doglasprincedavinson@gmail.com
 - Théo, POSENEL, theo.posenel@gmail.com
+- Mourad, LARBI MESSAOUDI, moradlarbi1@gmail.com
