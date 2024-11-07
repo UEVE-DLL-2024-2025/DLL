@@ -108,39 +108,65 @@ class Demineur:
         else:
             print("La case est déjà découverte et ne peut pas être marquée.")
 
+    def sauvegarder_jeu(self):
+        """
+        Save the current game state to a JSON file.
+        """
+        data = {
+            'taille': self.taille,
+            'nombre_mines': self.nombre_mines,
+            'grille': self.grille,
+            'grille_visible': self.grille_visible,
+        }
+        with open(self.fichier_sauvegarde, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
+        print(f"Jeu sauvegardé dans {self.fichier_sauvegarde}.")
+
     def jouer(self):
-        """A Function to launch the game."""   
+        """A Function to launch the game."""
         game_in_progress = True
         self.statistiques.start_timer()
         while game_in_progress:
             print("\n [ Bienvenue au Démineur ! ] \n")
             self.afficher_grille()
+            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées.")
+            choix = input(
+                "Entrez 'f x y' pour marquer/démarquer, 'x y' pour découvrir, "
+                "ou 'save' pour sauvegarder : "
+            ).split()
+            if choix[0].lower() == 'save':
+                self.sauvegarder_jeu()
+                continue
+
             try:
-                entree = input("'f x y' pour marquer/démarquer ou 'x y' pour découvrir : ").split()
-                if len(entree) == 3 and entree[0] == 'f':
-                    # Mark/unmark the cells
-                    x, y = map(int, entree[1:])
+                if len(choix) == 3 and choix[0] == 'f':
+                    # Marquer/démarquer une case
+                    x, y = map(int, choix[1:])
                     self.marquer_case(x, y)
                     continue
-                if len(entree) == 2:
-                    # Discover the cells
-                    x, y = map(int, entree)
+                if len(choix) == 2:
+                    # Découvrir une case
+                    x, y = map(int, choix)
                 else:
-                    print("Error, entrer les coordonnées sous la forme 'x y' ou 'f x y'.")
+                    print(
+                        "Erreur : entrez 'f x y' pour marquer/démarquer, ou 'x y' pour découvrir."
+                    )
                     continue
             except ValueError:
                 print("Coordonnées invalides. Veuillez réessayer.")
                 continue
+
             if self.grille[y][x] == 'M':
-                #Display the grid with the mine visible
-                self.decouvrir_cases(x,y)
+                # Afficher la grille avec les mines visibles
+                self.decouvrir_cases(x, y)
                 self.afficher_grille()
                 print("Perdu !")
-                #End the game
+                # Fin du jeu
                 game_in_progress = False
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_loss()
                 break
+
             self.decouvrir_cases(x, y)
             if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
@@ -149,9 +175,8 @@ class Demineur:
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_victory()
                 break
-        print(f"Temps écoulé: {temps_ecoule:.2f} secondes")
+        print(f"Temps écoulé : {temps_ecoule:.2f} secondes")
         self.statistiques.display_statistics()
-
 
         # Demande si le joueur souhaite recommencer une partie
         while True:
