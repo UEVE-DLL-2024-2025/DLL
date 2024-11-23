@@ -2,6 +2,7 @@
 import random
 import json
 import os
+import time
 from statistiques import Statistiques
 
 class Demineur:
@@ -34,6 +35,7 @@ class Demineur:
         self.marques = set()
         self.__placer_mines()
         self.__calculer_indices()
+        self.mouvements = 0
 
     def __placer_mines(self):
         mines_placees = 0
@@ -69,6 +71,8 @@ class Demineur:
         if self.grille_visible[y][x] != '■':
             return
         self.grille_visible[y][x] = self.grille[y][x]
+        self.mouvements += 1
+
         if self.grille[y][x] == '0':
             self.decouvrir_cases(x - 1, y)
             self.decouvrir_cases(x + 1, y)
@@ -80,6 +84,22 @@ class Demineur:
         print("    "+ " ".join([str(i) for i in range(self.taille)]))
         for idx, ligne in enumerate(self.grille_visible):
             print(f"{idx:2}| " + ' '.join(ligne) + " |")
+
+        mines_restantes = self.nombre_mines - sum(row.count('M') for row in self.grille_visible)
+
+        if self.statistiques.timer_start:
+            temps_ecoule = int(time.time() - self.statistiques.timer_start)
+        else:
+            temps_ecoule = 0
+
+        hours, remainder = divmod(temps_ecoule, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        print(
+            f"\nMines restantes: {mines_restantes} | "
+            f"Mouvements: {self.mouvements} | "
+            f"Temps: {hours:02}:{minutes:02}:{seconds:02}"
+)
 
     def charger_jeu(self):
         """
