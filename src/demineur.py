@@ -211,10 +211,23 @@ class Demineur:
             print("Réponse invalide, veuillez répondre par 'oui' ou 'non'.")
 
 if __name__ == "__main__":
-    niveau_difficulte = input("Choisissez un niveau de difficulte (facile, moyen, difficile): ")
-    try:
-        jeu = Demineur(niveau_difficulte)
-        jeu.charger_jeu()
-        jeu.jouer()
-    except ValueError as e:
-        print(e)
+    # Continuer à demander tant qu'un niveau de difficulté valide n'est pas entré
+    while True:
+        niveau_difficulte = input(
+            "Choisissez un niveau de difficulte (facile, moyen, difficile): "
+        ).lower()
+        if niveau_difficulte in ['facile', 'moyen', 'difficile']:
+            try:
+                jeu = Demineur(niveau_difficulte)
+                jeu.charger_jeu()
+                jeu.jouer()
+                break  # Sortir de la boucle une fois que le jeu commence
+            except ValueError as e:
+                print(e)
+                break  # Sortir s'il y a une erreur lors de la création du jeu
+        else:
+            MESSAGE_ERREUR = (
+                "Erreur : Niveau de difficulté invalide. "
+                "Veuillez choisir 'facile', 'moyen' ou 'difficile'."
+            )
+            print(MESSAGE_ERREUR)
