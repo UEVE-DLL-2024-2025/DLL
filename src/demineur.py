@@ -3,6 +3,10 @@ import random
 import json
 import os
 from statistiques import Statistiques
+from colorama import init, Fore, Style
+
+# Initialize colorama for colors
+init()
 
 class Demineur:
     """Class representing a Deminer game"""
@@ -122,46 +126,57 @@ class Demineur:
             json.dump(data, file, ensure_ascii=False, indent=4)
         print(f"Jeu sauvegardé dans {self.fichier_sauvegarde}.")
 
+    def afficher_instructions(self):
+        """Affiche les instructions du jeu"""
+        print(f"\n{Fore.CYAN}=== COMMANDES DISPONIBLES ==={Style.RESET_ALL}")
+        print(f"{Fore.WHITE}• x y{Style.RESET_ALL}     : Découvrir la case aux coordonnées (x,y)")
+        print(f"{Fore.WHITE}• f x y{Style.RESET_ALL}   : Marquer/Démarquer une case avec un drapeau")
+        print(f"{Fore.WHITE}• save{Style.RESET_ALL}    : Sauvegarder la partie")
+        print(f"{Fore.WHITE}• quit{Style.RESET_ALL}    : Quitter la partie")
+        print("\n" + "─" * 40)
+
     def jouer(self):
         """A Function to launch the game."""
         game_in_progress = True
         self.statistiques.start_timer()
+        self.afficher_instructions()  # Afficher les instructions au début
+
         while game_in_progress:
-            print("\n [ Bienvenue au Démineur ! ] \n")
+            print(f"\n{Fore.CYAN}[ Bienvenue au Démineur ! ]{Style.RESET_ALL}\n")
             self.afficher_grille()
-            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées.")
-            choix = input(
-                "Entrez 'f x y' pour marquer/démarquer, 'x y' pour découvrir, "
-                "ou 'save' pour sauvegarder : "
-            ).split()
+            print(f"\n{Fore.GREEN}Entrez une commande >{Style.RESET_ALL} ", end='')
+            choix = input().strip().split()
+
+            if not choix:
+                continue
+
             if choix[0].lower() == 'save':
                 self.sauvegarder_jeu()
+                continue
+            elif choix[0].lower() == 'quit':
+                if input(f"{Fore.YELLOW}Voulez-vous vraiment quitter ? (o/n): {Style.RESET_ALL}").lower() == 'o':
+                    print("Partie terminée !")
+                    break
                 continue
 
             try:
                 if len(choix) == 3 and choix[0] == 'f':
-                    # Marquer/démarquer une case
                     x, y = map(int, choix[1:])
                     self.marquer_case(x, y)
                     continue
                 if len(choix) == 2:
-                    # Découvrir une case
                     x, y = map(int, choix)
                 else:
-                    print(
-                        "Erreur : entrez 'f x y' pour marquer/démarquer, ou 'x y' pour découvrir."
-                    )
+                    print(f"{Fore.RED}Erreur : entrez 'f x y' pour marquer/démarquer, ou 'x y' pour découvrir.{Style.RESET_ALL}")
                     continue
             except ValueError:
-                print("Coordonnées invalides. Veuillez réessayer.")
+                print(f"{Fore.RED}Coordonnées invalides. Veuillez réessayer.{Style.RESET_ALL}")
                 continue
 
             if self.grille[y][x] == 'M':
-                # Afficher la grille avec les mines visibles
                 self.decouvrir_cases(x, y)
                 self.afficher_grille()
-                print("Perdu !")
-                # Fin du jeu
+                print(f"\n{Fore.RED}💥 BOOM ! Partie perdue ! 💥{Style.RESET_ALL}")
                 game_in_progress = False
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_loss()
@@ -169,32 +184,32 @@ class Demineur:
 
             self.decouvrir_cases(x, y)
             if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
-                print("Gagne !")
-                #End the game
+                print(f"\n{Fore.GREEN}🎉 VICTOIRE ! Félicitations ! 🎉{Style.RESET_ALL}")
                 game_in_progress = False
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_victory()
                 break
-        print(f"Temps écoulé : {temps_ecoule:.2f} secondes")
+
+        print(f"\nTemps écoulé : {temps_ecoule:.2f} secondes")
         self.statistiques.display_statistics()
 
-        # Demande si le joueur souhaite recommencer une partie
         while True:
-            restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
+            restart = input(f"\n{Fore.CYAN}Voulez-vous recommencer une partie ? (oui/non) : {Style.RESET_ALL}").lower()
             if restart == 'oui':
                 nouveau_jeu = Demineur(self.nombre_mines)
                 nouveau_jeu.jouer()
                 break
             if restart == 'non':
-                print("Partie terminée !")
+                print(f"\n{Fore.YELLOW}Merci d'avoir joué ! Au revoir !{Style.RESET_ALL}")
                 break
-            print("Réponse invalide, veuillez répondre par 'oui' ou 'non'.")
+            print(f"{Fore.RED}Réponse invalide, veuillez répondre par 'oui' ou 'non'.{Style.RESET_ALL}")
 
 if __name__ == "__main__":
-    niveau_difficulte = input("Choisissez un niveau de difficulte (facile, moyen, difficile): ")
+    print(f"{Fore.CYAN}=== DÉMINEUR ==={Style.RESET_ALL}")
+    niveau_difficulte = input("Choisissez un niveau de difficulté (facile, moyen, difficile): ")
     try:
         jeu = Demineur(niveau_difficulte)
         jeu.charger_jeu()
         jeu.jouer()
     except ValueError as e:
-        print(e)
+        print(f"{Fore.RED}{str(e)}{Style.RESET_ALL}")
