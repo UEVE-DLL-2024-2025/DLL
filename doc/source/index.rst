@@ -17,3 +17,4 @@ Ceci est la documentation du démineur.
     :hidden:
 
     api
+    docu
