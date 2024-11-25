@@ -80,13 +80,43 @@ class Demineur:
             self.decouvrir_cases(x, y + 1)
 
     def afficher_grille(self):
-        """A Function to show the game's board"""
-        print("    "+ " ".join([str(i) for i in range(self.taille)]))
+        """A Function to show the game's board with better visuals"""
+        
+        def color_number(num):
+            """Returns a colored version of the number for visibility."""
+            color_map = {
+                '1': '\033[94m1\033[0m',  # Blue
+                '2': '\033[92m2\033[0m',  # Green
+                '3': '\033[93m3\033[0m',  # Yellow
+                '4': '\033[91m4\033[0m',  # Red
+                '5': '\033[95m5\033[0m',  # Purple
+                # Add more colors as needed
+            }
+            return color_map.get(num, num)  # Default to uncolored if not in map
+        
+        # Define the symbols for display
+        display_map = {
+            '■': '🟦',  # Hidden cell
+            'M': '💣',  # Mine
+            'F': '🚩',  # Flag
+            '0': '⬜'   # Empty cell
+        }
+
+        # Display the column headers
+        print("    " + " ".join([str(i) for i in range(self.taille)]))
         for idx, ligne in enumerate(self.grille_visible):
-            print(f"{idx:2}| " + ' '.join(ligne) + " |")
-
-        mines_restantes = self.nombre_mines - sum(row.count('M') for row in self.grille_visible)
-
+            # Transform the grid row for display
+            displayed_row = []
+            for cell in ligne:
+                if cell.isdigit():  # If the cell is a number, color it
+                    displayed_row.append(color_number(cell))
+                else:  # Otherwise, map it to its display symbol
+                    displayed_row.append(display_map.get(cell, cell))
+            # Print each row with its index
+            print(f"{idx:2} | " + ' '.join(displayed_row) + " |")
+        
+        # Display mines remaining, moves, and timer
+        mines_restantes = self.nombre_mines - sum(row.count('🚩') for row in self.grille_visible)
         if self.statistiques.timer_start:
             temps_ecoule = int(time.time() - self.statistiques.timer_start)
         else:
@@ -99,7 +129,7 @@ class Demineur:
             f"\nMines restantes: {mines_restantes} | "
             f"Mouvements: {self.mouvements} | "
             f"Temps: {hours:02}:{minutes:02}:{seconds:02}"
-)
+        )
 
     def charger_jeu(self):
         """
