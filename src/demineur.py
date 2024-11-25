@@ -4,6 +4,9 @@ import json
 import os
 import time
 from statistiques import Statistiques
+from colorama import Fore, Back, Style, init
+
+init()  # Initialiser colorama
 
 class Demineur:
     """Class representing a Deminer game"""
@@ -83,7 +86,22 @@ class Demineur:
         """A Function to show the game's board"""
         print("    "+ " ".join([str(i) for i in range(self.taille)]))
         for idx, ligne in enumerate(self.grille_visible):
-            print(f"{idx:2}| " + ' '.join(ligne) + " |")
+             #print(f"{idx:2}| " + ' '.join(ligne) + " |")
+            print(f"{idx:2}| ", end="")
+            
+            for case in ligne:
+                # Affichage coloré des cases
+                if case == 'M':
+                    print(Fore.RED + 'M', end=" ")  # Mine en rouge
+                elif case == 'F':
+                    print(Fore.YELLOW + 'F', end=" ")  # Drapeau en jaune
+                elif case == '■':
+                    print(Style.BRIGHT + Fore.GREEN + '■', end=" ")  # Case non découverte en vert clair
+                elif case == '0':
+                    print(Fore.WHITE + '0', end=" ")  # Nombre de mines autour en blanc
+                else:
+                    print(Fore.CYAN + case, end=" ")  # Autres nombres en cyan
+            print(Style.RESET_ALL)  # Réinitialiser la couleur
 
         mines_restantes = self.nombre_mines - sum(row.count('M') for row in self.grille_visible)
 
@@ -125,6 +143,10 @@ class Demineur:
             self.grille_visible[y][x] = '.'
         elif self.grille_visible[y][x] == '.':
             self.grille_visible[y][x] = 'F'
+         # La case est toujours masquée, on peut poser un drapeau
+        elif self.grille_visible[y][x] == '■':
+             self.grille_visible[y][x] = 'F'
+             print(f"Case ({x}, {y}) marquée avec un drapeau.")
         else:
             print("La case est déjà découverte et ne peut pas être marquée.")
 
@@ -159,7 +181,7 @@ class Demineur:
                 continue
 
             try:
-                if len(choix) == 3 and choix[0] == 'f':
+                if len(choix) == 3 and choix[0].lower() == 'f':
                     # Marquer/démarquer une case
                     x, y = map(int, choix[1:])
                     self.marquer_case(x, y)
