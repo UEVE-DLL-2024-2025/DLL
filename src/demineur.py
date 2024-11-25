@@ -80,7 +80,7 @@ class Demineur:
             self.decouvrir_cases(x, y + 1)
 
     def afficher_grille(self):
-        """A Function to show the game's board with better visuals."""
+        """A Function to show the game's board with better visuals"""
         
         def color_number(num):
             """Returns a colored version of the number for visibility."""
