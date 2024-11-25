@@ -36,6 +36,17 @@ class Demineur:
         self.__placer_mines()
         self.__calculer_indices()
         self.mouvements = 0
+        #Adding random messages fort win and loss
+        self.messages_victoire = [
+            "Félicitations, vous êtes un vrai démineur professionnel ! 🎉",
+            "Victoire ! Les mines n'avaient aucune chance contre vous. 🚀",
+            "Bravo ! Même les mines sont impressionnées par votre talent. 🌟"
+        ]
+        self.messages_defaite = [
+            "Boom 💥! Peut-être que démineur n'est pas votre vocation.",
+            "Oups, c'était une mine... On réessaye ? 😅",
+            "Perdu ! Les mines sont plus malignes aujourd'hui. 🙃"
+        ]
 
     def __placer_mines(self):
         mines_placees = 0
@@ -149,7 +160,7 @@ class Demineur:
         while game_in_progress:
             print("\n [ Bienvenue au Démineur ! ] \n")
             self.afficher_grille()
-            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées.")
+            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées")
             choix = input(
                 "Entrez 'f x y' pour marquer/démarquer, 'x y' pour découvrir, "
                 "ou 'save' pour sauvegarder : "
@@ -180,7 +191,7 @@ class Demineur:
                 # Afficher la grille avec les mines visibles
                 self.decouvrir_cases(x, y)
                 self.afficher_grille()
-                print("Perdu !")
+                print(random.choice(self.messages_defaite))
                 # Fin du jeu
                 game_in_progress = False
                 temps_ecoule = self.statistiques.stop_timer()
@@ -189,8 +200,8 @@ class Demineur:
 
             self.decouvrir_cases(x, y)
             if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
-                print("Gagne !")
-                #End the game
+                print(random.choice(self.messages_victoire))
+                # End the game
                 game_in_progress = False
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_victory()
@@ -198,11 +209,11 @@ class Demineur:
         print(f"Temps écoulé : {temps_ecoule:.2f} secondes")
         self.statistiques.display_statistics()
 
-        # Demande si le joueur souhaite recommencer une partie
+# Demande si le joueur souhaite recommencer une partie
         while True:
             restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
             if restart == 'oui':
-                nouveau_jeu = Demineur(self.nombre_mines)
+                nouveau_jeu = Demineur(self.fichier_sauvegarde)
                 nouveau_jeu.jouer()
                 break
             if restart == 'non':
