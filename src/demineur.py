@@ -8,34 +8,67 @@ from colorama import Fore, Back, Style, init
 
 init()  # Initialiser colorama
 
+def choisir_difficulte():
+    """Demande à l'utilisateur de choisir un niveau de difficulté 
+    et retourne les paramètres du jeu."""
+    niveau_difficulte = input(
+        "Choisissez un niveau de difficulté (facile, moyen, difficile, custom) : "
+    ).lower()
+
+    if niveau_difficulte not in ['facile', 'moyen', 'difficile', 'custom']:
+        raise ValueError(
+            "Le niveau de difficulté doit être 'facile', 'moyen', 'difficile' ou 'custom'."
+        )
+
+    if niveau_difficulte == 'facile':
+        return 8, 10  # Taille, Nombre de mines
+    if niveau_difficulte == 'moyen':
+        return 10, 20
+    if niveau_difficulte == 'difficile':
+        return 16, 40
+
+    print("Vous avez choisi le niveau 'custom'.")
+    while True:
+        try:
+            grille_taille = int(input("Entrez la taille de la grille (minimum 5, maximum 20) : "))
+            if 5 <= grille_taille <= 20:
+                break
+            print("Erreur : La taille doit être comprise entre 5 et 20.")
+        except ValueError:
+            print("Erreur : Veuillez entrer un nombre valide.")
+
+    while True:
+        try:
+            max_mines = grille_taille * grille_taille - 1
+            mines_nombre = int(
+                input(f"Entrez le nombre de mines (minimum 1, maximum {max_mines}) : ")
+            )
+            if 1 <= mines_nombre <= max_mines:
+                break
+            print(f"Erreur : Le nombre de mines doit être compris entre 1 et {max_mines}.")
+        except ValueError:
+            print("Erreur : Veuillez entrer un nombre valide.")
+
+    return grille_taille, mines_nombre
+
 class Demineur:
     """Class representing a Deminer game"""
 
-
-    def __init__(self, fichier_sauvegarde='demineur.json', difficulte='moyen'):
+    def __init__(self, fichier_sauvegarde='demineur.json', taille=10, nombre_mines=20):
         """
-        Initialize the game with a grid and place mines based on difficulty level.
-
-        :param difficulte: Difficulty level of the game ('facile', 'moyen', 'difficile').
-        :raises ValueError: If the difficulty level is not one of 'facile', 'moyen', or 'difficile'.
+        Initialize the game with a grid and place mines based on parameters.
+        
+        :param fichier_sauvegarde: Save file name.
+        :param taille: Grid size.
+        :param nombre_mines: Number of mines.
         """
-        if difficulte not in ['facile', 'moyen', 'difficile']:
-            raise ValueError("Le niveau de difficulté doit être 'facile', 'moyen' ou 'difficile'.")
-        if difficulte == 'facile':
-            self.taille = 8
-            self.nombre_mines = 10
-        elif difficulte == 'difficile':
-            self.taille = 16
-            self.nombre_mines = 40
-        else:  # moyen
-            self.taille = 10
-            self.nombre_mines = 20
-
+        self.taille = taille
+        self.nombre_mines = nombre_mines
+        self.fichier_sauvegarde = fichier_sauvegarde
+        # Initialise l'attribut statistiques
+        self.statistiques = Statistiques()  # Exemple, si `Statistiques` est une classe
         self.grille = [['■' for _ in range(self.taille)] for _ in range(self.taille)]
         self.grille_visible = [['■' for _ in range(self.taille)] for _ in range(self.taille)]
-        self.statistiques = Statistiques()
-        self.fichier_sauvegarde = fichier_sauvegarde
-        self.marques = set()
         self.__placer_mines()
         self.__calculer_indices()
         self.mouvements = 0
@@ -318,23 +351,10 @@ def jouer_multijoueur(self):
             print("Réponse invalide, veuillez répondre par 'oui' ou 'non'.")
 
 if __name__ == "__main__":
-    # Continuer à demander tant qu'un niveau de difficulté valide n'est pas entré
-    while True:
-        niveau_difficulte = input(
-            "Choisissez un niveau de difficulte (facile, moyen, difficile): "
-        ).lower()
-        if niveau_difficulte in ['facile', 'moyen', 'difficile']:
-            try:
-                jeu = Demineur(niveau_difficulte)
-                jeu.charger_jeu()
-                jeu.jouer()
-                break  # Sortir de la boucle une fois que le jeu commence
-            except ValueError as e:
-                print(e)
-                break  # Sortir s'il y a une erreur lors de la création du jeu
-        else:
-            MESSAGE_ERREUR = (
-                "Erreur : Niveau de difficulté invalide. "
-                "Veuillez choisir 'facile', 'moyen' ou 'difficile'."
-            )
-            print(MESSAGE_ERREUR)
+    try:
+        real_taille, nb_mines = choisir_difficulte()
+        jeu = Demineur(taille=real_taille, nombre_mines=nb_mines)
+        jeu.charger_jeu()
+        jeu.jouer()
+    except ValueError as e:
+        print(e)
