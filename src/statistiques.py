@@ -52,14 +52,12 @@ class Statistiques:
             return elapsed_time
         return 0
 
-    def record_victory(self, elapsed_time):
+    def record_victory(self):
         """
         Record a victory and update statistics.
         """
         self.parties_gagnees += 1
         self.nombre_parties += 1
-        self.meilleurs_scores.append(elapsed_time)
-        self.meilleurs_scores = sorted(self.meilleurs_scores)[:5]
         self.save_statistics()
 
     def record_loss(self):
