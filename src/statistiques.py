@@ -10,6 +10,7 @@ class Statistiques:
     Class for tracking and managing game statistics.
     """
     def __init__(self, fichier_stats='statistiques.json'):
+        self.timer_started = False
         self.parties_gagnees = 0
         self.parties_perdues = 0
         self.temps_total = 0.0
@@ -35,6 +36,8 @@ class Statistiques:
         Start the timer.
         """
         self.timer_start = time.time()
+        self.timer_started = True
+        print("Le timer a démarré.")
 
     def stop_timer(self):
         """
