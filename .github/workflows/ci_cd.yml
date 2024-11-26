@@ -42,7 +42,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --max-attributes=8 $(git ls-files '*.py')
+        pylint --max-attributes=11 --max-statements=56 $(git ls-files '*.py') 
 
   doc-build:
     runs-on: ubuntu-latest

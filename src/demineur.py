@@ -49,15 +49,17 @@ def choisir_difficulte():
     return grille_taille, mines_nombre
 
 class Demineur:
-    """Class representing a Deminer game"""
-
-    def __init__(self, fichier_sauvegarde='demineur.json', taille=10, nombre_mines=20):
-        """
-        Initialize the game with a grid and place mines based on parameters.
-        
-        :param fichier_sauvegarde: Save file name.
-        :param taille: Grid size.
-        :param nombre_mines: Number of mines.
+    """
+    Classe représentant le jeu de Démineur.
+    """
+    def __init__(self, fichier_sauvegarde='demineur.json',
+                taille=10, nombre_mines=20,
+                exploratoire=False):
+        """    
+            Initialize the game with a grid and place mines based on parameters.
+            :param fichier_sauvegarde: Save file name.
+            :param taille: Grid size.
+            :param nombre_mines: Number of mines.
         """
         self.taille = taille
         self.nombre_mines = nombre_mines
@@ -69,6 +71,8 @@ class Demineur:
         self.__placer_mines()
         self.__calculer_indices()
         self.mouvements = 0
+        self.exploratoire = exploratoire
+
 
     def __placer_mines(self):
         mines_placees = 0
@@ -85,22 +89,20 @@ class Demineur:
                 if self.grille[y][x] == 'M':
                     continue
                 mines_autour = 0
-                for dx in range(y - 1, y + 2):
-                    for dy in range(x - 1, x + 2):
+                for dx in range(-1, 2):
+                    for dy in range(-1, 2):
                         nx, ny = x + dx, y + dy
-                        if nx < 0 or ny < 0 or nx >= self.taille or ny >= self.taille:
-                            continue
-                        if self.grille[ny][nx] == 'M':
+                        if (
+                            0 <= nx < self.taille
+                            and 0 <= ny < self.taille
+                            and self.grille[ny][nx] == 'M'):
                             mines_autour += 1
                 self.grille[y][x] = str(mines_autour)
 
     def decouvrir_cases(self, x, y):
         """A Function to uncover a cell"""
-        # Vérifier si les coordonnées sont dans les limites de la grille
         if not (0 <= x < self.taille and 0 <= y < self.taille):
             return
-        if self.grille_visible[y][x] == 'F':
-            self.grille_visible[y][x] = self.grille[y][x]
         if self.grille_visible[y][x] != '■':
             return
         self.grille_visible[y][x] = self.grille[y][x]
@@ -114,7 +116,7 @@ class Demineur:
 
     def afficher_grille(self):
         """A Function to show the game's board"""
-        print("    "+ " ".join([str(i) for i in range(self.taille)]))
+        print("    " + " ".join([str(i) for i in range(self.taille)]))
         for idx, ligne in enumerate(self.grille_visible):
             print(f"{idx:2}| " + ' '.join(ligne) + " |")
 
@@ -131,13 +133,10 @@ class Demineur:
         print(
             f"\nMines restantes: {mines_restantes} | "
             f"Mouvements: {self.mouvements} | "
-            f"Temps: {hours:02}:{minutes:02}:{seconds:02}"
-)
+            f"Temps: {hours:02}:{minutes:02}:{seconds:02}" )
 
     def charger_jeu(self):
-        """
-        Load the game state from a JSON file.
-        """
+        """Load the game state from a JSON file."""
         if os.path.exists(self.fichier_sauvegarde):
             with open(self.fichier_sauvegarde, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -147,16 +146,17 @@ class Demineur:
                     'grille', [['.' for _ in range(self.taille)] for _ in range(self.taille)]
                 )
                 self.grille_visible = data.get(
-                    'grille_visible', 
+                    'grille_visible',
                     [['.' for _ in range(self.taille)] for _ in range(self.taille)]
                 )
+
     def marquer_case(self, x, y):
         """ Mark or unmark a cell with a flag. """
         if not (0 <= x < self.taille and 0 <= y < self.taille):
             return
         if self.grille_visible[y][x] == 'F':
-            self.grille_visible[y][x] = '.'
-        elif self.grille_visible[y][x] == '.':
+            self.grille_visible[y][x] = '■'
+        elif self.grille_visible[y][x] == '■':
             self.grille_visible[y][x] = 'F'
         else:
             print("La case est déjà découverte et ne peut pas être marquée.")
@@ -216,40 +216,37 @@ class Demineur:
             ).split()
             if self.traiter_choix(choix):
                 continue
-
             try:
                 if len(choix) == 3 and choix[0] == 'f':
-                    # Marquer/démarquer une case
                     x, y = map(int, choix[1:])
                     self.marquer_case(x, y)
                     continue
                 if len(choix) == 2:
-                    # Découvrir une case
                     x, y = map(int, choix)
                 else:
-                    print(
-                        "Erreur : entrez 'f x y' pour marquer/démarquer, ou 'x y' pour découvrir."
-                    )
+                    print("Erreur : entrez 'f x y' pour marquer/démarquer"
+                          "ou 'x y' pour découvrir.")
                     continue
             except ValueError:
                 print("Coordonnées invalides. Veuillez réessayer.")
                 continue
 
             if self.grille[y][x] == 'M':
-                # Afficher la grille avec les mines visibles
-                self.decouvrir_cases(x, y)
+                self.grille_visible[y][x] = 'M'
                 self.afficher_grille()
-                print("Perdu !")
-                # Fin du jeu
-                game_in_progress = False
-                temps_ecoule = self.statistiques.stop_timer()
-                self.statistiques.record_loss()
-                break
+                print("⚠️ Attention : Vous avez découvert une mine !"
+                      " La partie continue en mode exploratoire.")
+
+                if not self.exploratoire:
+                    print("Perdu !")
+                    game_in_progress = False
+                    temps_ecoule = self.statistiques.stop_timer()
+                    self.statistiques.record_loss()
+                    break
 
             self.decouvrir_cases(x, y)
             if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
-                #End the game
                 game_in_progress = False
                 temps_ecoule = self.statistiques.stop_timer()
                 self.statistiques.record_victory()
@@ -272,7 +269,8 @@ class Demineur:
 if __name__ == "__main__":
     try:
         real_taille, nb_mines = choisir_difficulte()
-        jeu = Demineur(taille=real_taille, nombre_mines=nb_mines)
+        mode_exploratoire = input("Activer le mode exploratoire ? (oui/non) : ").lower() == 'oui'
+        jeu = Demineur(taille=real_taille, nombre_mines=nb_mines,exploratoire=mode_exploratoire)
         jeu.charger_jeu()
         jeu.jouer()
     except ValueError as e:
