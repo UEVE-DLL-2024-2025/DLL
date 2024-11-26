@@ -17,6 +17,7 @@ class Statistiques:
         self.nombre_parties = 0
         self.timer_start = None
         self.fichier_stats = fichier_stats
+        self.meilleurs_scores = []
         self.load_statistics()
 
     def load_statistics(self):
@@ -29,6 +30,7 @@ class Statistiques:
                 self.parties_gagnees = data.get('parties_gagnees', 0)
                 self.parties_perdues = data.get('parties_perdues', 0)
                 self.temps_total = data.get('temps_total', 0.0)
+                self.meilleurs_scores = data.get('meilleurs_scores', [])
                 self.nombre_parties = self.parties_gagnees + self.parties_perdues
 
     def start_timer(self):
@@ -74,6 +76,7 @@ class Statistiques:
             'parties_gagnees': self.parties_gagnees,
             'parties_perdues': self.parties_perdues,
             'temps_total': self.temps_total,
+            'meilleurs_scores': self.meilleurs_scores,
         }
         with open(self.fichier_stats, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4)
@@ -87,3 +90,9 @@ class Statistiques:
         print(f"Parties perdues: {self.parties_perdues}")
         print(f"Temps total: {self.temps_total:.2f} secondes")
         print(f"Temps moyen par partie: {temps_moyen:.2f} secondes")
+        self.display_best_scores() 
+
+    def display_best_scores(self):
+        print("Meilleurs temps (en secondes) :")
+        for idx, score in enumerate(self.meilleurs_scores, start=1):
+            print(f"{idx}. {score:.2f} s")
