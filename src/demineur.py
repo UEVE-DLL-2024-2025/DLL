@@ -128,6 +128,20 @@ class Demineur:
         else:
             print("La case est déjà découverte et ne peut pas être marquée.")
 
+    def suggerer_case(self):
+        """Suggest randomly a safe cell that doesn't contain a mine"""
+        cases_sures = []
+        for y in range(self.taille):
+            for x in range(self.taille):
+                if self.grille_visible[y][x] in ('■', 'F') and self.grille[y][x] != 'M':
+                    cases_sures.append((x, y))
+
+        if cases_sures:
+            case_suggeree = random.choice(cases_sures)
+            print(f"Suggestion : essayez la case ({case_suggeree[0]}, {case_suggeree[1]}).")
+        else:
+            print("Aucune case à suggérer.")
+
     def sauvegarder_jeu(self):
         """
         Save the current game state to a JSON file.
@@ -142,6 +156,16 @@ class Demineur:
             json.dump(data, file, ensure_ascii=False, indent=4)
         print(f"Jeu sauvegardé dans {self.fichier_sauvegarde}.")
 
+    def traiter_choix(self, choix):
+        """Used for player choice inputs"""
+        if choix[0].lower() == 'save':
+            self.sauvegarder_jeu()
+            return True
+        if choix[0].lower() == 'help':
+            self.suggerer_case()
+            return True
+        return False
+
     def jouer(self):
         """A Function to launch the game."""
         game_in_progress = True
@@ -149,13 +173,15 @@ class Demineur:
         while game_in_progress:
             print("\n [ Bienvenue au Démineur ! ] \n")
             self.afficher_grille()
-            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées.")
+            print("Tapez 'save' pour sauvegarder la partie,"
+                  "'help' pour une suggestion,"
+                  "ou entrez les coordonnées.")
             choix = input(
                 "Entrez 'f x y' pour marquer/démarquer, 'x y' pour découvrir, "
+                "'help' pour suggérer une case, "
                 "ou 'save' pour sauvegarder : "
             ).split()
-            if choix[0].lower() == 'save':
-                self.sauvegarder_jeu()
+            if self.traiter_choix(choix):
                 continue
 
             try:
