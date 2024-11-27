@@ -6,7 +6,7 @@ import time
 from statistiques import Statistiques
 
 def choisir_difficulte():
-    """Demande à l'utilisateur de choisir un niveau de difficulté 
+    """Demande à l'utilisateur de choisir un niveau de difficulté
     et retourne les paramètres du jeu."""
     niveau_difficulte = input(
         "Choisissez un niveau de difficulté (facile, moyen, difficile, custom) : "
@@ -55,7 +55,7 @@ class Demineur:
     def __init__(self, fichier_sauvegarde='demineur.json',
                 taille=10, nombre_mines=20,
                 exploratoire=False):
-        """    
+        """
             Initialize the game with a grid and place mines based on parameters.
             :param fichier_sauvegarde: Save file name.
             :param taille: Grid size.
@@ -106,7 +106,6 @@ class Demineur:
         if self.grille_visible[y][x] != '■':
             return
         self.grille_visible[y][x] = self.grille[y][x]
-        self.mouvements += 1
 
         if self.grille[y][x] == '0':
             self.decouvrir_cases(x - 1, y)
@@ -245,6 +244,7 @@ class Demineur:
                     break
 
             self.decouvrir_cases(x, y)
+            self.mouvements += 1
             if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
                 print("Gagne !")
                 game_in_progress = False
