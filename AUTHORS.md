@@ -24,3 +24,4 @@
 - Sabrina, HASSAIM, hassaimsabrina@gmail.com
 - Maily, CIAVALDINI, mailyciavaldini@gmail.com
 - Mouheb, Felli, mouhebfelli@gmail.com
+- Soumaya, IKHRICHI, ikhrichism@gmail.com
