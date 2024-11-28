@@ -18,11 +18,11 @@ def choisir_difficulte():
         )
 
     if niveau_difficulte == 'facile':
-        return 8, 10  # Taille, Nombre de mines
+        return 'facile',8, 10  # Taille, Nombre de mines
     if niveau_difficulte == 'moyen':
-        return 10, 20
+        return 'moyen',10, 20
     if niveau_difficulte == 'difficile':
-        return 16, 40
+        return 'difficile',16, 40
 
     print("Vous avez choisi le niveau 'custom'.")
     while True:
@@ -46,7 +46,7 @@ def choisir_difficulte():
         except ValueError:
             print("Erreur : Veuillez entrer un nombre valide.")
 
-    return grille_taille, mines_nombre
+    return niveau_difficulte, grille_taille, mines_nombre
 
 class Demineur:
     """
@@ -54,7 +54,7 @@ class Demineur:
     """
     def __init__(self, fichier_sauvegarde='demineur.json',
                 taille=10, nombre_mines=20,
-                exploratoire=False):
+                exploratoire=False,difficulte='moyen',mode_chronometre=False):
         """
             Initialize the game with a grid and place mines based on parameters.
             :param fichier_sauvegarde: Save file name.
@@ -66,6 +66,13 @@ class Demineur:
         self.fichier_sauvegarde = fichier_sauvegarde
         # Initialise l'attribut statistiques
         self.statistiques = Statistiques()  # Exemple, si `Statistiques` est une classe
+        self.mode_chronometre = mode_chronometre
+        self.temps_limite = {
+            'facile': 180, 
+            'moyen': 300,   
+            'difficile': 600,
+            'custom': 600 }[difficulte]
+        self.debut_partie = None
         self.grille = [['■' for _ in range(self.taille)] for _ in range(self.taille)]
         self.grille_visible = [['■' for _ in range(self.taille)] for _ in range(self.taille)]
         self.__placer_mines()
@@ -132,7 +139,14 @@ class Demineur:
         print(
             f"\nMines restantes: {mines_restantes} | "
             f"Mouvements: {self.mouvements} | "
-            f"Temps: {hours:02}:{minutes:02}:{seconds:02}" )
+            f"Temps: {hours:02}:{minutes:02}:{seconds:02}")
+
+        if self.mode_chronometre and self.debut_partie:
+            temps_restant = max(0, self.temps_limite - (time.time() - self.debut_partie))
+            minutes, seconds = divmod(int(temps_restant), 60)
+            print(f"⏳ Temps restant : {minutes:02}:{seconds:02}")
+            if temps_restant <= 30:
+                print("⚠️ Attention, il vous reste moins de 30 secondes !")
 
     def charger_jeu(self):
         """Load the game state from a JSON file."""
@@ -188,6 +202,17 @@ class Demineur:
             json.dump(data, file, ensure_ascii=False, indent=4)
         print(f"Jeu sauvegardé dans {self.fichier_sauvegarde}.")
 
+    def verifier_temps(self):
+        """
+        Check if the time limit has been reached.
+        """
+        if self.mode_chronometre and self.debut_partie:
+            temps_ecoule = time.time() - self.debut_partie
+            if temps_ecoule >= self.temps_limite:
+                print("\n Temps écoulé ! Vous avez perdu.")
+                return True
+        return False
+
     def traiter_choix(self, choix):
         """Used for player choice inputs"""
         if choix[0].lower() == 'save':
@@ -202,12 +227,22 @@ class Demineur:
         """A Function to launch the game."""
         game_in_progress = True
         self.statistiques.start_timer()
+        self.debut_partie = time.time() if self.mode_chronometre else None
+
         while game_in_progress:
             print("\n [ Bienvenue au Démineur ! ] \n")
             self.afficher_grille()
             print("Tapez 'save' pour sauvegarder la partie,"
                   "'help' pour une suggestion,"
                   "ou entrez les coordonnées.")
+            if self.verifier_temps():
+                game_in_progress = False
+                temps_ecoule = self.statistiques.stop_timer()  # Arrêter le chronomètre
+                self.statistiques.record_loss()  # Enregistrer la défaite
+                print("\n⏰ Temps écoulé ! Vous avez perdu. Temps "
+                        f"joué : {temps_ecoule:.2f} secondes.")
+                break
+            print("Tapez 'save' pour sauvegarder la partie ou entrez les coordonnées.")
             choix = input(
                 "Entrez 'f x y' pour marquer/démarquer, 'x y' pour découvrir, "
                 "'help' pour suggérer une case, "
@@ -229,7 +264,6 @@ class Demineur:
             except ValueError:
                 print("Coordonnées invalides. Veuillez réessayer.")
                 continue
-
             if self.grille[y][x] == 'M':
                 self.grille_visible[y][x] = 'M'
                 self.afficher_grille()
@@ -253,7 +287,6 @@ class Demineur:
                 break
         print(f"Temps écoulé : {temps_ecoule:.2f} secondes")
         self.statistiques.display_statistics()
-
         # Demande si le joueur souhaite recommencer une partie
         while True:
             restart = input("Voulez-vous recommencer une partie ? (oui/non) : ").lower()
@@ -268,9 +301,12 @@ class Demineur:
 
 if __name__ == "__main__":
     try:
-        real_taille, nb_mines = choisir_difficulte()
+        niv_difficulte, real_taille, nb_mines = choisir_difficulte()
         mode_exploratoire = input("Activer le mode exploratoire ? (oui/non) : ").lower() == 'oui'
-        jeu = Demineur(taille=real_taille, nombre_mines=nb_mines,exploratoire=mode_exploratoire)
+        mode_chrono = input("Voulez-vous activer le mode chronométré ?"
+                            "(oui/non) : ").strip().lower()
+        jeu = Demineur(taille=real_taille, nombre_mines=nb_mines,exploratoire=mode_exploratoire,
+                        difficulte=niv_difficulte,mode_chronometre=mode_chrono == 'oui')
         jeu.charger_jeu()
         jeu.jouer()
     except ValueError as e:
