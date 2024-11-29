@@ -4,6 +4,9 @@ import json
 import os
 import time
 from statistiques import Statistiques
+from colorama import Fore, Back, Style, init
+
+init()  # Initialiser colorama
 
 def choisir_difficulte():
     """Demande à l'utilisateur de choisir un niveau de difficulté
@@ -124,7 +127,22 @@ class Demineur:
         """A Function to show the game's board"""
         print("    " + " ".join([str(i) for i in range(self.taille)]))
         for idx, ligne in enumerate(self.grille_visible):
-            print(f"{idx:2}| " + ' '.join(ligne) + " |")
+             #print(f"{idx:2}| " + ' '.join(ligne) + " |")
+            print(f"{idx:2}| ", end="")
+            
+            for case in ligne:
+                # Affichage coloré des cases
+                if case == 'M':
+                    print(Fore.RED + 'M', end=" ")  # Mine en rouge
+                elif case == 'F':
+                    print(Fore.YELLOW + 'F', end=" ")  # Drapeau en jaune
+                elif case == '■':
+                    print(Style.BRIGHT + Fore.GREEN + '■', end=" ")  # Case non découverte en vert clair
+                elif case == '0':
+                    print(Fore.WHITE + '0', end=" ")  # Nombre de mines autour en blanc
+                else:
+                    print(Fore.CYAN + case, end=" ")  # Autres nombres en cyan
+            print(Style.RESET_ALL)  # Réinitialiser la couleur
 
         mines_restantes = self.nombre_mines - sum(row.count('M') for row in self.grille_visible)
 
@@ -171,6 +189,10 @@ class Demineur:
             self.grille_visible[y][x] = '■'
         elif self.grille_visible[y][x] == '■':
             self.grille_visible[y][x] = 'F'
+         # La case est toujours masquée, on peut poser un drapeau
+        elif self.grille_visible[y][x] == '■':
+             self.grille_visible[y][x] = 'F'
+             print(f"Case ({x}, {y}) marquée avec un drapeau.")
         else:
             print("La case est déjà découverte et ne peut pas être marquée.")
 
@@ -201,6 +223,65 @@ class Demineur:
         with open(self.fichier_sauvegarde, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
         print(f"Jeu sauvegardé dans {self.fichier_sauvegarde}.")
+def jouer_multijoueur(self):
+    """
+    Gère une partie en mode multijoueur compétitif.
+    Les joueurs marquent des points en découvrant des cases sans mines.
+    """
+    print("Mode Multijoueur : Compétition")
+    joueurs = int(input("Nombre de joueurs (minimum 2) : "))
+    if joueurs < 2:
+        print("Il faut au moins 2 joueurs pour jouer en mode multijoueur.")
+        return
+
+    scores = [0] * joueurs
+    joueur_actuel = 0
+    game_in_progress = True
+
+    while game_in_progress:
+        print(f"\nTour du joueur {joueur_actuel + 1}")
+        print(f"Scores actuels : {scores}")
+        self.afficher_grille()
+
+        try:
+            choix = input("Entrez les coordonnées (x y) pour découvrir ou 'save' pour sauvegarder : ").split()
+            if choix[0].lower() == 'save':
+                self.sauvegarder_jeu()
+                continue
+            x, y = map(int, choix)
+        except ValueError:
+            print("Coordonnées invalides. Réessayez.")
+            continue
+
+        if not (0 <= x < self.taille and 0 <= y < self.taille):
+            print("Coordonnées hors limite. Réessayez.")
+            continue
+
+        if self.grille_visible[y][x] != '■':
+            print("Case déjà découverte ou marquée. Choisissez une autre case.")
+            continue
+
+        if self.grille[y][x] == 'M':
+            print("💥 Mine ! Aucun point pour ce tour.")
+            self.afficher_grille()
+            print(f"Le joueur {joueur_actuel + 1} a perdu !")
+            game_in_progress = False
+        else:
+            self.decouvrir_cases(x, y)
+            scores[joueur_actuel] += 1
+
+        # Vérifier si la partie est gagnée
+        if sum(row.count('■') for row in self.grille_visible) == self.nombre_mines:
+            print("\nToutes les cases sûres ont été découvertes !")
+            game_in_progress = False
+
+        # Passer au joueur suivant
+        joueur_actuel = (joueur_actuel + 1) % joueurs
+
+    print("\nPartie terminée !")
+    print(f"Scores finaux : {scores}")
+    gagnant = scores.index(max(scores)) + 1
+    print(f"🏆 Le joueur {gagnant} remporte la partie avec {max(scores)} points !")
 
     def verifier_temps(self):
         """
@@ -251,6 +332,8 @@ class Demineur:
             if self.traiter_choix(choix):
                 continue
             try:
+                if len(choix) == 3 and choix[0].lower() == 'f':
+                    # Marquer/démarquer une case
                 if len(choix) == 3 and choix[0] == 'f':
                     x, y = map(int, choix[1:])
                     self.marquer_case(x, y)
