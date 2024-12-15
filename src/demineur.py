@@ -60,7 +60,8 @@ class Demineur:
                             mines_autour += 1
 
                 self.grille[y][x] = str(mines_autour)
-
+    def test(self):
+        print("test")
     def decouvrir_cases(self, x, y):
         """A Function to uncover a cell"""
         if self.grille_visible[y][x] != '.':
